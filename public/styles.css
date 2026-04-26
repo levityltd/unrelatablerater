@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Dancing+Script:wght@700&family=Permanent+Marker&family=Oswald:wght@400;500&display=swap');
+
+:root {
+  --ds-black: #0A0A0A;
+  --ds-yellow: #F5C800;
+  --ds-orange: #F07A00;
+  --ds-magenta: #CC00D4;
+  --ds-white: #FFFFFF;
+  --ds-dim: #1A1A1A;
+  --ds-unlit: #2A2A2A;
+  --danger: #E03090;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--ds-black);
+  color: var(--ds-white);
+  font-family: "Oswald", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.site-logo {
+  position: fixed;
+  z-index: 6;
+  top: 23px;
+  left: 0;
+  display: block;
+  width: clamp(92px, 13vw, 160px);
+}
+
+.site-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.social-rail {
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px;
+  background: var(--ds-magenta);
+}
+
+.social-rail a {
+  display: grid;
+  width: 68px;
+  height: 68px;
+  place-items: center;
+  color: var(--ds-white);
+  text-decoration: none;
+}
+
+.social-rail svg {
+  width: 42px;
+  height: 42px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+.social-rail svg path,
+.social-rail svg circle,
+.social-rail svg rect {
+  vector-effect: non-scaling-stroke;
+}
+
+.social-rail a[aria-label="YouTube"] svg {
+  fill: currentColor;
+  stroke: none;
+}
+
+.social-rail .youtube-play {
+  fill: var(--ds-magenta);
+}
+
+.app-shell {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 96px 0 48px;
+}
+
+.hero {
+  padding: 18px 0 28px;
+}
+
+.intro {
+  text-align: center;
+}
+
+h1 {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--ds-white);
+  font-family: "Permanent Marker", cursive;
+  font-size: clamp(43px, 7vw, 86px);
+  line-height: 1.02;
+}
+
+.roast-copy {
+  max-width: 650px;
+  margin: 24px auto 0;
+  color: var(--ds-yellow);
+  font-family: "Permanent Marker", cursive;
+  font-size: clamp(20px, 2.6vw, 29px);
+  line-height: 1.35;
+}
+
+.rating-form,
+.gauge-panel {
+  background: var(--ds-dim);
+  border: 2px solid var(--ds-orange);
+}
+
+.rating-form {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+}
+
+label {
+  color: var(--ds-yellow);
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--ds-unlit);
+  background: var(--ds-dim);
+  color: var(--ds-white);
+  outline: none;
+  padding: 12px;
+}
+
+textarea {
+  resize: vertical;
+  height: 84px;
+  min-height: 84px;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--ds-orange);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+button {
+  min-height: 44px;
+  border-radius: 0;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.primary-button {
+  border: 1px solid var(--ds-magenta);
+  background: var(--ds-magenta);
+  color: var(--ds-white);
+  padding: 0 24px;
+}
+
+.secondary-button,
+.try-button {
+  border: 1px solid var(--ds-yellow);
+  background: transparent;
+  color: var(--ds-yellow);
+  padding: 0 18px;
+}
+
+.form-status,
+.sheet-status {
+  min-height: 22px;
+  margin: 0;
+  color: var(--ds-yellow);
+  font-size: 14px;
+}
+
+.rater-layout {
+  display: grid;
+  width: min(680px, 100%);
+  margin: 0 auto;
+  gap: 18px;
+  align-items: start;
+}
+
+.gauge-panel {
+  padding: 22px;
+}
+
+.gauge {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.gauge-border,
+.segment {
+  fill: none;
+  stroke-linecap: butt;
+}
+
+.gauge-border {
+  stroke: var(--ds-yellow);
+  stroke-width: 2;
+}
+
+.segment {
+  stroke-width: 21;
+}
+
+.needle {
+  stroke: var(--ds-white);
+  stroke-width: 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.45));
+}
+
+.center-dot {
+  fill: var(--ds-white);
+}
+
+.score-wrap {
+  text-align: center;
+}
+
+.score-number {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(76px, 12vw, 130px);
+  line-height: 0.9;
+}
+
+.score-total {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.42em;
+}
+
+.tier-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  max-width: 100%;
+  padding: 7px 14px;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.result-roast {
+  margin: 20px auto 16px;
+  color: var(--ds-yellow);
+  font-family: "Permanent Marker", cursive;
+  font-size: clamp(20px, 3vw, 30px);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.try-button {
+  margin-top: 8px;
+}
+
+.error {
+  color: var(--danger);
+}
+
+@media (max-width: 840px) {
+  .site-logo {
+    position: fixed;
+    top: 23px;
+    left: 0;
+    width: 118px;
+  }
+
+  .social-rail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .app-shell {
+    width: min(100% - 24px, 680px);
+    padding-top: 150px;
+  }
+
+  .hero {
+    padding-top: 34px;
+  }
+}

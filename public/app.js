@@ -1,0 +1,225 @@
+const tierColors = [
+  '#F5E050',
+  '#F5C800',
+  '#F5A000',
+  '#F07A00',
+  '#E85000',
+  '#E03090',
+  '#CC00D4',
+  '#AA00AA',
+  '#880088',
+  '#5E005E'
+];
+
+const tierLabels = [
+  'Completely ordinary',
+  'Barely unusual',
+  'Mildly unique',
+  'Noticeably different',
+  'Living differently',
+  'Increasingly detached',
+  'Quite out of touch',
+  'Rarefied air',
+  'Practically alien',
+  'What planet are you from?'
+];
+
+const center = { x: 200, y: 195 };
+const radius = 145;
+const segmentGap = 1.6;
+const form = document.querySelector('#ratingForm');
+const formStatus = document.querySelector('#formStatus');
+const sheetStatus = document.querySelector('#sheetStatus');
+const scoreWrap = document.querySelector('#scoreWrap');
+const scoreValue = document.querySelector('#scoreValue');
+const tierPill = document.querySelector('#tierPill');
+const resultRoast = document.querySelector('#resultRoast');
+const tryAnother = document.querySelector('#tryAnother');
+const needle = document.querySelector('#needle');
+const segments = document.querySelector('#segments');
+
+let activeScore = 0;
+let loadingFrame;
+let loadingStartedAt = 0;
+
+function polarToCartesian(angleDegrees, lineRadius = radius) {
+  const angleRadians = (angleDegrees * Math.PI) / 180;
+  return {
+    x: center.x + lineRadius * Math.cos(angleRadians),
+    y: center.y - lineRadius * Math.sin(angleRadians)
+  };
+}
+
+function arcPath(startAngle, endAngle) {
+  const start = polarToCartesian(startAngle);
+  const end = polarToCartesian(endAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+  return `M ${start.x.toFixed(3)} ${start.y.toFixed(3)} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x.toFixed(3)} ${end.y.toFixed(3)}`;
+}
+
+function scoreToAngle(score) {
+  return 180 - (Math.min(100, Math.max(0, score)) / 100) * 180;
+}
+
+function setNeedle(score) {
+  const tip = polarToCartesian(scoreToAngle(score), 132);
+  needle.setAttribute('x2', tip.x);
+  needle.setAttribute('y2', tip.y);
+}
+
+function renderGauge(score = activeScore) {
+  const activeTier = Math.ceil(Math.max(1, score) / 10);
+  segments.innerHTML = '';
+
+  tierColors.forEach((color, index) => {
+    const start = 180 - index * 18 - segmentGap / 2;
+    const end = 180 - (index + 1) * 18 + segmentGap / 2;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('class', 'segment');
+    path.setAttribute('d', arcPath(start, end));
+    path.setAttribute('stroke', index < activeTier ? color : '#2A2A2A');
+    segments.append(path);
+  });
+}
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function animateNeedle(toScore) {
+  const fromScore = activeScore;
+  const start = performance.now();
+  const duration = 1700;
+
+  return new Promise((resolve) => {
+    function tick(now) {
+      const progress = Math.min(1, (now - start) / duration);
+      const score = fromScore + (toScore - fromScore) * easeOutCubic(progress);
+      setNeedle(score);
+      renderGauge(score);
+
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        activeScore = toScore;
+        setNeedle(toScore);
+        renderGauge(toScore);
+        resolve();
+      }
+    }
+
+    requestAnimationFrame(tick);
+  });
+}
+
+function startLoadingOscillation() {
+  loadingStartedAt = performance.now();
+  cancelAnimationFrame(loadingFrame);
+
+  function tick(now) {
+    const phase = (now - loadingStartedAt) / 360;
+    const score = 50 + Math.sin(phase) * 44;
+    setNeedle(score);
+    renderGauge(score);
+    loadingFrame = requestAnimationFrame(tick);
+  }
+
+  tick(loadingStartedAt);
+}
+
+function stopLoadingOscillation() {
+  cancelAnimationFrame(loadingFrame);
+}
+
+async function postJson(url, body) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Request failed.');
+  }
+
+  return data;
+}
+
+function setBusy(isBusy) {
+  form.querySelectorAll('button, input, textarea').forEach((element) => {
+    element.disabled = isBusy;
+  });
+}
+
+function showResult(rating) {
+  const color = tierColors[rating.tier - 1] || tierColors[0];
+  scoreValue.textContent = rating.score;
+  scoreValue.style.color = color;
+  tierPill.textContent = `Tier ${rating.tier}: ${rating.tierLabel}`;
+  tierPill.style.background = `${color}33`;
+  tierPill.style.border = `1px solid ${color}`;
+  tierPill.style.color = '#FFFFFF';
+  resultRoast.textContent = `"${rating.roast}"`;
+  scoreWrap.hidden = false;
+}
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const formData = new FormData(form);
+  const email = String(formData.get('email') || '').trim();
+  const experience = String(formData.get('experience') || '').trim();
+
+  if (!form.reportValidity()) {
+    return;
+  }
+
+  setBusy(true);
+  scoreWrap.hidden = true;
+  formStatus.classList.remove('error');
+  sheetStatus.classList.remove('error');
+  formStatus.textContent = 'Calculating your alienation index...';
+  sheetStatus.textContent = '';
+  startLoadingOscillation();
+
+  try {
+    const rating = await postJson('/api/rate', { experience });
+    stopLoadingOscillation();
+    await animateNeedle(rating.score);
+    showResult(rating);
+    formStatus.textContent = '';
+
+    try {
+      await postJson('/api/submit', { email, experience, rating });
+      sheetStatus.textContent = 'Saved to Google Sheet.';
+    } catch (error) {
+      sheetStatus.textContent = error.message;
+      sheetStatus.classList.add('error');
+    }
+  } catch (error) {
+    stopLoadingOscillation();
+    formStatus.textContent = error.message;
+    formStatus.classList.add('error');
+    setNeedle(activeScore);
+    renderGauge(activeScore);
+  } finally {
+    setBusy(false);
+  }
+});
+
+form.addEventListener('reset', () => {
+  activeScore = 0;
+  scoreWrap.hidden = true;
+  formStatus.textContent = '';
+  sheetStatus.textContent = '';
+  setNeedle(0);
+  renderGauge(0);
+});
+
+tryAnother.addEventListener('click', () => {
+  form.reset();
+  document.querySelector('#experience').focus();
+});
+
+renderGauge(0);
+setNeedle(0);

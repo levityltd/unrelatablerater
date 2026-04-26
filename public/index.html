@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unrelatability Rater</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <a class="site-logo" href="/" aria-label="Derek Sheen home">
+      <img src="/assets/DerekSheenLogo.avif" alt="Derek Sheen">
+    </a>
+
+    <aside class="social-rail" aria-label="Social links">
+      <a href="#" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22 12s0-3.4-.44-5.03c-.24-.9-.95-1.61-1.85-1.85C18.08 4.68 12 4.68 12 4.68s-6.08 0-7.71.44c-.9.24-1.61.95-1.85 1.85C2 8.6 2 12 2 12s0 3.4.44 5.03c.24.9.95 1.61 1.85 1.85 1.63.44 7.71.44 7.71.44s6.08 0 7.71-.44c.9-.24 1.61-.95 1.85-1.85C22 15.4 22 12 22 12Z"></path>
+          <path class="youtube-play" d="M10 8.9v6.2l5.4-3.1L10 8.9Z"></path>
+        </svg>
+      </a>
+    </aside>
+
+    <main class="app-shell">
+      <section class="hero">
+        <div class="intro">
+          <h1>Unrelatability Rater</h1>
+          <p class="roast-copy">How unrelatable is your most unrelatable moment, <em>really</em>? The truly unrelatable will be featured on Derek's tour 👀</p>
+        </div>
+      </section>
+
+      <section class="rater-layout">
+        <div class="gauge-panel">
+          <svg class="gauge" id="gauge" viewBox="0 0 400 215" role="img" aria-label="Unrelatability score gauge">
+            <path class="gauge-border" d="M 35 195 A 165 165 0 0 1 365 195"></path>
+            <g id="segments"></g>
+            <line id="needle" class="needle" x1="200" y1="195" x2="35" y2="195"></line>
+            <circle class="center-dot" cx="200" cy="195" r="8"></circle>
+          </svg>
+
+          <div class="score-wrap" id="scoreWrap" hidden>
+            <div class="score-number"><span id="scoreValue">0</span><span class="score-total">/100</span></div>
+            <div class="tier-pill" id="tierPill">Tier 1: Completely ordinary</div>
+            <p class="result-roast" id="resultRoast"></p>
+            <p class="sheet-status" id="sheetStatus"></p>
+            <button class="try-button" id="tryAnother" type="button">Try another</button>
+          </div>
+        </div>
+
+        <form class="rating-form" id="ratingForm">
+          <label for="experience">Experience</label>
+          <textarea id="experience" name="experience" rows="3" placeholder="I once..." required minlength="8"></textarea>
+
+          <label for="email">Email *</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Rate me</button>
+          </div>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
