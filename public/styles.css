@@ -29,66 +29,6 @@ textarea {
   font: inherit;
 }
 
-.site-logo {
-  position: fixed;
-  z-index: 6;
-  top: 23px;
-  left: 0;
-  display: block;
-  width: clamp(92px, 13vw, 160px);
-}
-
-.site-logo img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.social-rail {
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 8px;
-  background: var(--ds-magenta);
-}
-
-.social-rail a {
-  display: grid;
-  width: 68px;
-  height: 68px;
-  place-items: center;
-  color: var(--ds-white);
-  text-decoration: none;
-}
-
-.social-rail svg {
-  width: 42px;
-  height: 42px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-}
-
-.social-rail svg path,
-.social-rail svg circle,
-.social-rail svg rect {
-  vector-effect: non-scaling-stroke;
-}
-
-.social-rail a[aria-label="YouTube"] svg {
-  fill: currentColor;
-  stroke: none;
-}
-
-.social-rail .youtube-play {
-  fill: var(--ds-magenta);
-}
-
 .app-shell {
   width: min(1180px, calc(100% - 40px));
   margin: 0 auto;
